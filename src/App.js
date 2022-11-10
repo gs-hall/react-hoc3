@@ -4,6 +4,8 @@ import YearTable from './components/YearTable';
 import SortTable from './components/SortTable';
 import { fetchContent, fetchContentFromCache } from './functions/fetchContent';
 import "./css/index.css"
+import { withAggregation } from './components/withAggregation';
+import { aggregateByMonth, aggregateByYear, aggregateByDate } from './functions/transformData';
 
 export default function App() {
   const [list, setList] = useState([]);
@@ -12,7 +14,7 @@ export default function App() {
     fetchContent()
       .then(res => res.json())
       .then(result => {
-        console.log('loaded by network');
+        console.log('loaded by network',result.list.length);
         setList(result.list);
       }
     ).catch(
@@ -23,11 +25,19 @@ export default function App() {
       })
   }, []);
 
+  const MonthTableWithAggregation = withAggregation(MonthTable, aggregateByMonth);
+  const YearTableWithAggregation = withAggregation(YearTable, aggregateByYear);
+  const SortTableWithAggregation = withAggregation(SortTable, aggregateByDate);
+
   return (
     <div id="app">
-      <MonthTable list={list} />
-      <YearTable list={list} />
-      <SortTable list={list} />
+      <MonthTableWithAggregation list={list} />
+      <YearTableWithAggregation list={list} />
+      <SortTableWithAggregation list={list} />
     </div>
+    /*
+    <YearTable list={list} />
+    <SortTable list={list} />
+    */
   );
 };
