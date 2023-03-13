@@ -1,2 +1,2 @@
-# netology-react-hoc3
+# react-hoc3
 Aggregation
